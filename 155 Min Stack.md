@@ -64,16 +64,17 @@ class MinStack {
 	}
 }
 ```
- 
-
 ####改进一
 
 对于上述代码中的最小元素数组minValueArr，可以考虑当有更小值的时候才放入数组，这样可以节省更多空间。
 
 ###参考
 
- 参考他人的，发现直接可以用java中的Stack类。。。
- 代码如下：
+####参考一
+
+参考他人的，发现直接可以用java中的Stack类，下面代码用了两个stack类，一个储存元素，一个储存最小值。
+
+代码如下：
 
  ```java
 class MinStack {
@@ -104,3 +105,43 @@ class MinStack {
     }
 }
  ```
+
+####参考二
+
+只用了一个栈同时存放最小值和元素，非常巧妙！先设置最小值为最大整数，push的时候，比较最小值和x的大小，如果x值小于当前最小值，将当前最小值存入栈，设置当前最小值为x，把x推入栈，即当出现新的最小值的时候，把原先的最小值存入栈中。pop的时候，如果栈顶第一个值与当前最小值相同，说明pop的时候会改变最小值，此时pop出当前最小值，再次pop，得到当前最小值push之前的最小值。两次pop之后，栈顶为之前加入的元素。
+
+```java
+ class MinStack {
+    int min=Integer.MAX_VALUE;
+    Stack<Integer> stack = new Stack<Integer>();
+    public void push(int x) {
+       // only push the old minimum value when the current 
+       // minimum value changes after pushing the new value x
+        if(x <= min){
+            stack.push(min);
+            min=x;
+        }
+        stack.push(x);
+    }
+    public void pop() {
+       // if pop operation could result in the changing of the current minimum value, 
+        pop twice and change the current minimum value to the last minimum value.
+        if(stack.peek()==min) {
+            stack.pop();
+            min=stack.peek();
+            stack.pop();
+        }else{
+            stack.pop();
+        }
+        if(stack.empty()){
+            min=Integer.MAX_VALUE;
+        }
+    }
+    public int top() {
+        return stack.peek();
+    }
+    public int getMin() {
+        return min;
+    }
+}
+```
