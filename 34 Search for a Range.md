@@ -130,6 +130,8 @@ public class Solution {
 
 ###参考
 
+#### 参考一
+
 递归二分法
 
 ```java
@@ -164,5 +166,34 @@ public class Solution {
         else 
             binaryRangeSearch(A, target, lo, mid-1);
     }
+}
+```
+
+####参考二
+
+简洁的递归二分
+
+```java
+public int[] searchRange(int[] A, int l, int r, int target) {
+    int[] result = new int[] { -1, -1 };
+    while (l <= r) {
+        int mid = (l + r) / 2;
+        if (A[mid] < target) {
+            l = mid + 1;
+        } else if (A[mid] > target) {
+            r = mid - 1;
+        } else {
+            int[] left = searchRange(A, l, mid - 1, target);
+            result[0] = left[0] == -1 ? mid : left[0];
+            int[] right = searchRange(A, mid + 1, r, target);
+            result[1] = right[1] == -1 ? mid : right[1];
+            break;
+        }
+    }
+    return result;
+}
+
+public int[] searchRange(int[] A, int target) {
+    return searchRange(A, 0, A.length - 1, target);
 }
 ```
